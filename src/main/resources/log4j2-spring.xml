@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2018,  Cloud Lending, a Q2 Company. 
+  ~ All Rights Reserved.
+  -->
+
+<configuration monitorInterval="60">
+    <properties>
+        <property name="log-path">applogs</property>
+    </properties>
+    <appenders>
+        <console name="console-appender" target="SYSTEM_OUT">
+            <patternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>>
+            </patternLayout>
+        </console>
+        <file name="app-file-appender" fileName="${log-path}/app_log.log" >
+            <patternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </patternLayout>
+        </file>
+        <file name="springboot-file-appender" fileName="${log-path}/springboot_log.log" >
+            <patternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </patternLayout>
+        </file>
+    </appenders>
+    <loggers>
+    <!-- additivity=false ==> do not propagate logs to parent logger -->
+       <logger name="org.springframework.web" level="debug" additivity="false">
+                   <appenderRef ref="springboot-file-appender"/>
+                   <appenderRef ref="console-appender"/>
+       </logger>
+       <logger name="com.cls.platform" level="debug" additivity="false">
+                   <appenderRef ref="app-file-appender"/>
+                   <appenderRef ref="console-appender"/>
+       </logger>
+       <root>
+           <appenderRef ref="console-appender"/>
+       </root>
+   </loggers>
+</configuration>

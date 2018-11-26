@@ -1,0 +1,15 @@
+version: '2'
+services:
+  cls-mysql:
+    container_name: cls-mysql
+    image: mysql
+    expose:
+    - "3306"
+    ports:
+    - "3306:3306"
+    environment:
+      MYSQL_DATABASE: cls_mysql
+      MYSQL_USER: cls
+      MYSQL_PASSWORD: cls
+      MYSQL_ROOT_PASSWORD: cls
+    command: mysqld --lower_case_table_names=1 --skip-ssl

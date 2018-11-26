@@ -1,0 +1,73 @@
+/*
+ * Copyright (c) 2018, Cloud Lending, a Q2 Company.
+ * All Rights Reserved.
+ */
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath group: 'com.avast.gradle', name: 'docker-compose-gradle-plugin', version: docker_compose_gradle_version
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.cls'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+apply from: 'gradle/docker.gradle'
+
+dependencies {
+    // https://mvnrepository.com/artifact/javax.inject/javax.inject
+    compile group: 'javax.inject', name: 'javax.inject', version: javax_inject_version
+
+    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: okhttp_verson
+    compile group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: okhttp_verson
+
+    // https://mvnrepository.com/artifact/com.force.api/force-wsc
+    compile group: 'com.force.api', name: 'force-wsc', version: force_com_version
+    // https://mvnrepository.com/artifact/com.force.api/force-partner-api
+    compile group: 'com.force.api', name: 'force-partner-api', version: force_partner_api_version
+
+    //implementation('org.springframework.boot:spring-boot-starter-aop')
+    implementation('org.springframework.boot:spring-boot-starter-batch')
+
+    //implementation('org.springframework.boot:spring-boot-starter-quartz')
+    //implementation('org.springframework.boot:spring-boot-starter-security')
+
+    implementation('org.springframework.boot:spring-boot-starter-web')
+
+    // JPA Data (We are going to use Repositories, Entities, Hibernate, etc...)
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    //We'll use log4j for logging
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-log4j2
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: spring_boot_starter_log4j2_version
+
+    runtimeOnly('mysql:mysql-connector-java')
+    //compileOnly('org.projectlombok:lombok')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('org.springframework.batch:spring-batch-test')
+}
+
+configurations {
+    all {
+        //We'll use log4j for logging, excluding the logging module from the starter group
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+}

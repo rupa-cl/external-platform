@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2018, Cloud Lending, a Q2 Company.
+ * All Rights Reserved.
+ */
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath "gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:0.9.11"
+    }
+}
+
+apply plugin: com.google.cloud.tools.jib.gradle.JibPlugin
+
+apply plugin: 'docker-compose'
+
+
+dockerCompose {
+    useComposeFiles = ['docker/dev.yml'] // like 'docker-compose -f <file>'
+    stopContainers = true                                              // useful for debugging
+    removeContainers = true
+    removeImages = "None" // Other accepted values are: "All" and "Local"
+    removeVolumes = false
+    //environment.put 'BACKEND_ADDRESS', '192.168.1.100' // Pass environment variable to 'docker-compose' for substitution in compose file
+}
+
+jib {
+    from {
+        image = 'openjdk:8-jre-alpine'
+    }
+    to {
+        image = 'clend-batch:latest'
+    }
+    container {
+        entrypoint = ['sh', '-c', 'chmod +x /entrypoint.sh && sync && /entrypoint.sh']
+        ports = ['8080']
+        environment = [
+            SPRING_OUTPUT_ANSI_ENABLED: 'ALWAYS',
+            JHIPSTER_SLEEP: '0'
+        ]
+        useCurrentTimestamp = true
+    }
+}
